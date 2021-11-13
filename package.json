@@ -4,7 +4,6 @@
   "description": "Express boilerplate for APIs with Knex.js",
   "main": "index.js",
   "scripts": {
-    "knex": "knex",
     "dev": "nodemon index",
     "start": "node index",
     "test": "jest --watchAll"
@@ -24,11 +23,9 @@
     "babel-jest": "^25.3.0",
     "jest": "^25.3.0",
     "nodemon": "^2.0.3",
-    "sqlite3": "^4.1.1",
     "supertest": "^4.0.2"
   },
   "dependencies": {
-    "express": "^4.17.1",
-    "knex": "^0.20.13"
+    "express": "^4.17.1"
   }
 }
