@@ -3,11 +3,12 @@ const mongoose = require("mongoose");
 const userSchema = new mongoose.Schema({
   username: String,
   password: String,
-  lists: [{ listId: String }],
+  listsIDs: [{ listId: String }],
 });
 
 const listSchema = new mongoose.Schema({
-  items: [{ itemId: String }],
+  itemsIDs: [{ itemId: String }],
+  name: String,
 });
 
 const itemSchema = new mongoose.Schema({
