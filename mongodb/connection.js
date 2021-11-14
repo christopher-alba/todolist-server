@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 mongoose.connect(
-  "mongodb+srv://christopher-alba:14Keyboard@cluster0.xbufm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+  "mongodb+srv://christopher-alba:1234@cluster0.xbufm.mongodb.net/todolist?retryWrites=true&w=majority",
   { useNewUrlParser: true, useUnifiedTopology: true }
 );
 

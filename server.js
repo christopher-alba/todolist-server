@@ -1,13 +1,15 @@
-const express = require('express')
+const express = require("express");
+var cors = require("cors");
 
-const users = require('./routes/users')
+const users = require("./routes/users");
 
-const server = express()
+const server = express();
 
 // Middleware
-server.use(express.json())
+server.use(express.json());
+server.use(cors());
 
 // Routes
-server.use('/users', users)
+server.use("/auth", users);
 
-module.exports = server
+module.exports = server;
