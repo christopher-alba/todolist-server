@@ -3,10 +3,35 @@ const mongoose = require("mongoose");
 const userSchema = new mongoose.Schema({
   username: String,
   password: String,
-  token: String,
-  permission: String,
+  lists: [{ listId: String }],
+});
+
+const listSchema = new mongoose.Schema({
+  items: [{ itemId: String }],
+});
+
+const itemSchema = new mongoose.Schema({
+  text: String,
+  status: {
+    type: String,
+    enum: ["NEW", "IN PROGRESS", "COMPLETE"],
+    default: "NEW",
+  },
+  dateCreated: {
+    type: Date,
+    default: new Date(),
+    min: new Date(),
+    max: new Date(),
+  },
+  dateDue: {
+    type: Date,
+    default: undefined,
+    min: new Date(),
+  },
 });
 
 module.exports = {
   userSchema,
+  listSchema,
+  itemSchema,
 };
