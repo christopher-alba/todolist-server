@@ -6,14 +6,11 @@ const getLists = async (username) => {
   let lists = [];
   for (let i = 0; i < user.listsIDs.length; i++) {
     const listID = user.listsIDs[i];
-    console.log(listID);
     let list = await List.findOne({
       _id: ObjectId(listID.listId),
     });
     lists.push(list);
   }
-
-  console.log(lists);
   return lists;
 };
 
@@ -21,7 +18,6 @@ const createList = async (listFields, username) => {
   const list = new List({ ...listFields });
   const res = await list.save();
   const usersOtherLists = await User.findOne({ username: username });
-  console.log(usersOtherLists.listsIDs);
   let listsIDsFinal = [];
 
   for (let i = 0; i < usersOtherLists.listsIDs.length; i++) {
@@ -41,8 +37,27 @@ const createList = async (listFields, username) => {
   return { ...res._doc };
 };
 
-const deleteList = (listID, username) => {
-  List.deleteOne({ _id: listID });
+const deleteList = async (listID, username) => {
+  const res = await List.deleteOne({ _id: ObjectId(listID) });
+  const user = await User.findOne({ username: username });
+
+  let listsIDsFinal = [];
+  for (let i = 0; i < user.listsIDs.length; i++) {
+    if (user.listsIDs[i].listId !== listID) {
+      console.log(user.listsIDs[i].listId);
+      console.log(listID);
+      listsIDsFinal.push(user.listsIDs[i]);
+    }
+  }
+
+  console.log(listsIDsFinal.length);
+  await User.updateOne(
+    { username: username },
+    {
+      listsIDs: listsIDsFinal,
+    }
+  );
+  return { ...res };
 };
 
 module.exports = {

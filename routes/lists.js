@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { getLists, createList } = require("../mongodb/db/lists");
+const { getLists, createList, deleteList } = require("../mongodb/db/lists");
 
 router.get("/:username/lists", async (req, res) => {
   try {
@@ -17,6 +17,16 @@ router.post("/:username/lists", async (req, res) => {
   try {
     const lists = await createList(req.body, req.params.username);
     res.send({ lists }).status(200);
+  } catch (err) {
+    console.log(err);
+    res.send({ err }).status(400);
+  }
+});
+
+router.delete("/:username/lists/:listid", async (req, res) => {
+  try {
+    const response = await deleteList(req.params.listid, req.params.username);
+    res.send({ response }).status(200);
   } catch (err) {
     console.log(err);
     res.send({ err }).status(400);
