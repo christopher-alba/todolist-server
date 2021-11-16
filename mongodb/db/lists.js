@@ -1,5 +1,5 @@
 const { ObjectId } = require("bson");
-const { List, User } = require("../models");
+const { List, User, Item } = require("../models");
 
 const getLists = async (username) => {
   const user = await User.findOne({ username });
@@ -44,8 +44,6 @@ const deleteList = async (listID, username) => {
   let listsIDsFinal = [];
   for (let i = 0; i < user.listsIDs.length; i++) {
     if (user.listsIDs[i].listId !== listID) {
-      console.log(user.listsIDs[i].listId);
-      console.log(listID);
       listsIDsFinal.push(user.listsIDs[i]);
     }
   }
@@ -60,8 +58,21 @@ const deleteList = async (listID, username) => {
   return { ...res };
 };
 
+const getListItems = async (username, listID) => {
+  const list = await List.findOne({ _id: ObjectId(listID) });
+
+  let listItems = [];
+  let listItemsIDs = list.itemsIDs;
+  for (let i = 0; i < listItemsIDs.length; i++) {
+    const item = await Item.findOne({ _id: listItemsIDs[i] });
+    listItems.push(item);
+  }
+  return listItems;
+};
+
 module.exports = {
   getLists,
   createList,
   deleteList,
+  getListItems,
 };
