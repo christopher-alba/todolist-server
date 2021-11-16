@@ -94,7 +94,7 @@ const updateListItem = async (listItem, username, itemID) => {
       _id: ObjectId(itemID),
     },
     {
-      ...listITem,
+      ...listItem,
     }
   );
 
