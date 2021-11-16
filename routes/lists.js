@@ -7,12 +7,12 @@ const {
   getListItems,
   createListItem,
   updateListItem,
+  deleteListItem,
 } = require("../mongodb/db/lists");
 
 router.get("/:username/lists", async (req, res) => {
   try {
     const lists = await getLists(req.params.username);
-    console.log(lists);
     res.status(200).send({ lists });
   } catch (err) {
     console.log(err);
@@ -65,6 +65,16 @@ router.put("/:username/items/:itemID", async (req, res) => {
       req.params.itemID
     );
     res.status(200).send({ listItem });
+  } catch (err) {
+    console.log(err);
+    res.status(400).send({ err });
+  }
+});
+
+router.delete("/:username/:listID/items/:itemID", async (req, res) => {
+  try {
+    const response = await deleteListItem(req.params.listID, req.params.itemID);
+    res.status(200).send({ response });
   } catch (err) {
     console.log(err);
     res.status(400).send({ err });

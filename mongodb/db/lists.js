@@ -75,7 +75,6 @@ const createListItem = async (listItem, username, listID) => {
   const res = await item.save();
 
   let list = await List.findOne({ _id: ObjectId(listID) });
-  console.log(list);
   list.itemsIDs.push(res._id);
   await List.updateOne(
     {
@@ -101,6 +100,26 @@ const updateListItem = async (listItem, username, itemID) => {
   return res;
 };
 
+const deleteListItem = async (listID, itemID) => {
+  const res = await Item.deleteOne({
+    _id: itemID,
+  });
+
+  const list = await List.findOne({ _id: ObjectId(listID) });
+
+  await List.updateOne(
+    {
+      _id: ObjectId(listID),
+    },
+    {
+      itemsIDs: list.itemsIDs.filter((id) => {
+        return id._id.valueOf() !== itemID;
+      }),
+    }
+  );
+  return res;
+};
+
 module.exports = {
   getLists,
   createList,
@@ -108,4 +127,5 @@ module.exports = {
   getListItems,
   createListItem,
   updateListItem,
+  deleteListItem,
 };
