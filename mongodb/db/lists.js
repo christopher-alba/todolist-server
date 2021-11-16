@@ -64,10 +64,41 @@ const getListItems = async (username, listID) => {
   let listItems = [];
   let listItemsIDs = list.itemsIDs;
   for (let i = 0; i < listItemsIDs.length; i++) {
-    const item = await Item.findOne({ _id: listItemsIDs[i] });
+    const item = await Item.findOne({ _id: ObjectId(listItemsIDs[i]) });
     listItems.push(item);
   }
   return listItems;
+};
+
+const createListItem = async (listItem, username, listID) => {
+  const item = new Item({ ...listItem });
+  const res = await item.save();
+
+  let list = await List.findOne({ _id: ObjectId(listID) });
+  console.log(list);
+  list.itemsIDs.push(res._id);
+  await List.updateOne(
+    {
+      _id: ObjectId(listID),
+    },
+    {
+      itemsIDs: list.itemsIDs,
+    }
+  );
+  return res;
+};
+
+const updateListItem = async (listItem, username, itemID) => {
+  const res = await Item.updateOne(
+    {
+      _id: ObjectId(itemID),
+    },
+    {
+      ...listITem,
+    }
+  );
+
+  return res;
 };
 
 module.exports = {
@@ -75,4 +106,6 @@ module.exports = {
   createList,
   deleteList,
   getListItems,
+  createListItem,
+  updateListItem,
 };

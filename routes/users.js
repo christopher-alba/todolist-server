@@ -5,20 +5,16 @@ router.post("/login", (req, res) => {
   login(req.body)
     .then((response) => {
       const userObj = response._doc;
-      res
-        .send({
-          username: userObj.username,
-          password: userObj.password,
-          token: response.token,
-        })
-        .status(200);
+      res.status(200).send({
+        username: userObj.username,
+        password: userObj.password,
+        token: response.token,
+      });
     })
     .catch((err) => {
-      return res
-        .send({
-          error: err,
-        })
-        .status(400);
+      return res.status(400).send({
+        error: err,
+      });
     });
 });
 
@@ -26,20 +22,16 @@ router.post("/register", (req, res) => {
   register(req.body)
     .then((response) => {
       const userObj = response._doc;
-      res
-        .send({
-          username: userObj.username,
-          password: userObj.password,
-          token: response.token,
-        })
-        .status(200);
+      res.status(200).send({
+        username: userObj.username,
+        password: userObj.password,
+        token: response.token,
+      });
     })
     .catch((err) => {
-      return res
-        .send({
-          error: err,
-        })
-        .status(400);
+      return res.status(400).send({
+        error: err,
+      });
     });
 });
 
