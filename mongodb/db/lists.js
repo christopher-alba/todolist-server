@@ -38,7 +38,6 @@ const createList = async (listFields, username) => {
 };
 
 const deleteList = async (listID, username) => {
-  const res = await List.deleteOne({ _id: ObjectId(listID) });
   const user = await User.findOne({ username: username });
 
   let listsIDsFinal = [];
@@ -48,13 +47,22 @@ const deleteList = async (listID, username) => {
     }
   }
 
-  console.log(listsIDsFinal.length);
   await User.updateOne(
     { username: username },
     {
       listsIDs: listsIDsFinal,
     }
   );
+
+  const list = await List.findOne({ _id: ObjectId(listID) });
+  const listItemsIDs = list.itemsIDs;
+
+  for (let i = 0; i < listItemsIDs.length; i++) {
+    await Item.deleteOne({
+      _id: listItemsIDs[i]._id,
+    });
+  }
+  const res = await List.deleteOne({ _id: ObjectId(listID) });
   return { ...res };
 };
 
