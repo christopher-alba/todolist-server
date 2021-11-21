@@ -1,4 +1,5 @@
 const express = require("express");
+const { authenticate } = require("../middleware");
 const router = express.Router();
 const {
   getLists,
@@ -10,7 +11,7 @@ const {
   deleteListItem,
 } = require("../mongodb/db/lists");
 
-router.get("/:username/lists", async (req, res) => {
+router.get("/:username/lists", authenticate, async (req, res) => {
   try {
     const lists = await getLists(req.params.username);
     res.status(200).send({ lists });
@@ -20,7 +21,7 @@ router.get("/:username/lists", async (req, res) => {
   }
 });
 
-router.get("/:username/lists/:listID", async (req, res) => {
+router.get("/:username/lists/:listID", authenticate, async (req, res) => {
   try {
     const listItems = await getListItems(
       req.params.username,
@@ -33,7 +34,7 @@ router.get("/:username/lists/:listID", async (req, res) => {
   }
 });
 
-router.post("/:username/lists", async (req, res) => {
+router.post("/:username/lists", authenticate, async (req, res) => {
   try {
     const lists = await createList(req.body, req.params.username);
     res.status(200).send({ lists });
@@ -43,7 +44,7 @@ router.post("/:username/lists", async (req, res) => {
   }
 });
 
-router.post("/:username/lists/:listID", async (req, res) => {
+router.post("/:username/lists/:listID", authenticate, async (req, res) => {
   try {
     const listItem = await createListItem(
       req.body,
@@ -57,7 +58,7 @@ router.post("/:username/lists/:listID", async (req, res) => {
   }
 });
 
-router.put("/:username/items/:itemID", async (req, res) => {
+router.put("/:username/items/:itemID", authenticate, async (req, res) => {
   try {
     const listItem = await updateListItem(
       req.body,
@@ -71,17 +72,24 @@ router.put("/:username/items/:itemID", async (req, res) => {
   }
 });
 
-router.delete("/:username/:listID/items/:itemID", async (req, res) => {
-  try {
-    const response = await deleteListItem(req.params.listID, req.params.itemID);
-    res.status(200).send({ response });
-  } catch (err) {
-    console.log(err);
-    res.status(400).send({ err });
+router.delete(
+  "/:username/:listID/items/:itemID",
+  authenticate,
+  async (req, res) => {
+    try {
+      const response = await deleteListItem(
+        req.params.listID,
+        req.params.itemID
+      );
+      res.status(200).send({ response });
+    } catch (err) {
+      console.log(err);
+      res.status(400).send({ err });
+    }
   }
-});
+);
 
-router.delete("/:username/lists/:listid", async (req, res) => {
+router.delete("/:username/lists/:listid", authenticate, async (req, res) => {
   try {
     const response = await deleteList(req.params.listid, req.params.username);
     res.status(200).send({ response });

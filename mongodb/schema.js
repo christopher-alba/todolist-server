@@ -4,6 +4,10 @@ const userSchema = new mongoose.Schema({
   username: String,
   password: String,
   listsIDs: [{ listId: String }],
+  token: {
+    type: String,
+    default: undefined,
+  },
 });
 
 const listSchema = new mongoose.Schema({

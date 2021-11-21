@@ -29,7 +29,7 @@ router.post("/register", (req, res) => {
       });
     })
     .catch((err) => {
-      return res.status(400).send({
+      return res.send({
         error: err,
       });
     });

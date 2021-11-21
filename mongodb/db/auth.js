@@ -9,6 +9,7 @@ const register = async (args) => {
     username: args.username,
     password: await encryptPassword(args.password),
     permission: args.permission,
+    token: undefined,
   };
   // Check conditions
   const user = await User.findOne({ username: args.username });
@@ -19,22 +20,40 @@ const register = async (args) => {
     const user = new User({ ...newUser });
     const res = await user.save();
     const token = getToken(res);
+    await User.updateOne(
+      { _id: res._id },
+      {
+        token: token,
+      }
+    );
     return { ...res, token };
   } catch (e) {
+    console.log(e);
     throw e;
   }
 };
 const login = async (args) => {
-  const user = await User.findOne({ username: args.username });
-  if (!user) {
-    throw new Error("User does not exist");
-  }
-  const isMatch = await comparePassword(args.password, user.password);
-  if (isMatch) {
-    const token = getToken(user);
-    return { ...user, token };
-  } else {
-    throw new Error("Wrong Password!");
+  try {
+    const user = await User.findOne({ username: args.username });
+    if (!user) {
+      throw new Error("User does not exist");
+    }
+    const isMatch = await comparePassword(args.password, user.password);
+    if (isMatch) {
+      const token = getToken(user);
+      await User.updateOne(
+        { _id: user._id },
+        {
+          token: token,
+        }
+      );
+      return { ...user, token };
+    } else {
+      throw new Error("Wrong Password!");
+    }
+  } catch (e) {
+    console.log(e);
+    throw e;
   }
 };
 
